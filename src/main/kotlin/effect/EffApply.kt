@@ -3,10 +3,13 @@ package effect
 
 
 
-/**
- *  Apply
- */
+// ---------------------------------------------------------------------------------------------
+// APPLICATIVE APPLY 1
+// ---------------------------------------------------------------------------------------------
 
+/**
+ *  Applicative Apply 1
+ */
 fun <E,R:Monoid<R>,A,T> effApply(f: (A) -> T, a: Eff<E,R,A>) : Eff<E,R,T>
 {
     val aValue = when (a) {
@@ -20,6 +23,10 @@ fun <E,R:Monoid<R>,A,T> effApply(f: (A) -> T, a: Eff<E,R,A>) : Eff<E,R,T>
 
 fun <E,R:Monoid<R>,A,T> apply(f: (A) -> T, a: Eff<E,R,A>) : Eff<E,R,T> = effApply(f, a)
 
+
+// ---------------------------------------------------------------------------------------------
+// APPLICATIVE APPLY 2
+// ---------------------------------------------------------------------------------------------
 
 fun <E,R:Monoid<R>,A,B,T> effApply(f: (A,B) -> T,
                                    a: Eff<E,R,A>,
@@ -41,6 +48,15 @@ fun <E,R:Monoid<R>,A,B,T> effApply(f: (A,B) -> T,
     return Val(f(aValue, bValue), env)
 }
 
+
+fun <E,R:Monoid<R>,A,B,T> apply(f: (A,B) -> T,
+                                a: Eff<E,R,A>,
+                                b: Eff<E,R,B>) : Eff<E,R,T> = effApply(f, a, b)
+
+
+// ---------------------------------------------------------------------------------------------
+// APPLICATIVE APPLY 3
+// ---------------------------------------------------------------------------------------------
 
 fun <E,R:Monoid<R>,A,B,C,T> effApply(f: (A,B,C) -> T,
                                      a: Eff<E,R,A>,
@@ -69,7 +85,17 @@ fun <E,R:Monoid<R>,A,B,C,T> effApply(f: (A,B,C) -> T,
     return Val(f(aValue, bValue, cValue), env)
 }
 
-// 4
+
+fun <E,R:Monoid<R>,A,B,C,T> apply(f: (A,B,C) -> T,
+                                  a: Eff<E,R,A>,
+                                  b: Eff<E,R,B>,
+                                  c: Eff<E,R,C>) : Eff<E,R,T> = effApply(f, a, b , c)
+
+
+// ---------------------------------------------------------------------------------------------
+// APPLICATIVE APPLY 4
+// ---------------------------------------------------------------------------------------------
+
 fun <E,R:Monoid<R>,A,B,C,D,T> effApply(f: (A,B,C,D) -> T,
                                        a: Eff<E,R,A>,
                                        b: Eff<E,R,B>,
@@ -105,7 +131,17 @@ fun <E,R:Monoid<R>,A,B,C,D,T> effApply(f: (A,B,C,D) -> T,
 }
 
 
-// 5
+fun <E,R:Monoid<R>,A,B,C,D,T> apply(f: (A,B,C,D) -> T,
+                                    a: Eff<E,R,A>,
+                                    b: Eff<E,R,B>,
+                                    c: Eff<E,R,C>,
+                                    d: Eff<E,R,D>) : Eff<E,R,T> = effApply(f, a, b, c, d)
+
+
+// ---------------------------------------------------------------------------------------------
+// APPLICATIVE APPLY 5
+// ---------------------------------------------------------------------------------------------
+
 fun <X,W:Monoid<W>,A,B,C,D,E,Z> effApply(f: (A,B,C,D,E) -> Z,
                                          a: Eff<X,W,A>,
                                          b: Eff<X,W,B>,
@@ -148,7 +184,18 @@ fun <X,W:Monoid<W>,A,B,C,D,E,Z> effApply(f: (A,B,C,D,E) -> Z,
 }
 
 
-// 6
+fun <X,W:Monoid<W>,A,B,C,D,E,Z> apply(f: (A,B,C,D,E) -> Z,
+                                      a: Eff<X,W,A>,
+                                      b: Eff<X,W,B>,
+                                      c: Eff<X,W,C>,
+                                      d: Eff<X,W,D>,
+                                      e: Eff<X,W,E>) : Eff<X,W,Z> = effApply(f,a,b,c,d,e)
+
+
+// ---------------------------------------------------------------------------------------------
+// APPLICATIVE APPLY 6
+// ---------------------------------------------------------------------------------------------
+
 fun <X,W:Monoid<W>,A,B,C,D,E,F,Z> effApply(z: (A,B,C,D,E,F) -> Z,
                                            a: Eff<X,W,A>,
                                            b: Eff<X,W,B>,
@@ -198,7 +245,19 @@ fun <X,W:Monoid<W>,A,B,C,D,E,F,Z> effApply(z: (A,B,C,D,E,F) -> Z,
 }
 
 
-// 7
+fun <X,W:Monoid<W>,A,B,C,D,E,F,Z> apply(z: (A,B,C,D,E,F) -> Z,
+                                        a: Eff<X,W,A>,
+                                        b: Eff<X,W,B>,
+                                        c: Eff<X,W,C>,
+                                        d: Eff<X,W,D>,
+                                        e: Eff<X,W,E>,
+                                        f: Eff<X,W,F>) : Eff<X,W,Z> = effApply(z,a,b,c,d,e,f)
+
+
+// ---------------------------------------------------------------------------------------------
+// APPLICATIVE APPLY 7
+// ---------------------------------------------------------------------------------------------
+
 fun <X,W:Monoid<W>,A,B,C,D,E,F,G,Z> effApply(z: (A,B,C,D,E,F,G) -> Z,
                                              a: Eff<X,W,A>,
                                              b: Eff<X,W,B>,
@@ -255,7 +314,20 @@ fun <X,W:Monoid<W>,A,B,C,D,E,F,G,Z> effApply(z: (A,B,C,D,E,F,G) -> Z,
 }
 
 
-// 8
+fun <X,W:Monoid<W>,A,B,C,D,E,F,G,Z> apply(z: (A,B,C,D,E,F,G) -> Z,
+                                          a: Eff<X,W,A>,
+                                          b: Eff<X,W,B>,
+                                          c: Eff<X,W,C>,
+                                          d: Eff<X,W,D>,
+                                          e: Eff<X,W,E>,
+                                          f: Eff<X,W,F>,
+                                          g: Eff<X,W,G>) : Eff<X,W,Z> = effApply(z,a,b,c,d,e,f,g)
+
+
+// ---------------------------------------------------------------------------------------------
+// APPLICATIVE APPLY 8
+// ---------------------------------------------------------------------------------------------
+
 fun <X,W:Monoid<W>,A,B,C,D,E,F,G,H,Z> effApply(z: (A,B,C,D,E,F,G,H) -> Z,
                                                a: Eff<X,W,A>,
                                                b: Eff<X,W,B>,
@@ -319,7 +391,22 @@ fun <X,W:Monoid<W>,A,B,C,D,E,F,G,H,Z> effApply(z: (A,B,C,D,E,F,G,H) -> Z,
 }
 
 
-// 9
+fun <X,W:Monoid<W>,A,B,C,D,E,F,G,H,Z> apply(z: (A,B,C,D,E,F,G,H) -> Z,
+                                            a: Eff<X,W,A>,
+                                            b: Eff<X,W,B>,
+                                            c: Eff<X,W,C>,
+                                            d: Eff<X,W,D>,
+                                            e: Eff<X,W,E>,
+                                            f: Eff<X,W,F>,
+                                            g: Eff<X,W,G>,
+                                            h: Eff<X,W,H>) : Eff<X,W,Z> =
+                                        effApply(z,a,b,c,d,e,f,g,h)
+
+
+// ---------------------------------------------------------------------------------------------
+// APPLICATIVE APPLY 9
+// ---------------------------------------------------------------------------------------------
+
 fun <X,W:Monoid<W>,A,B,C,D,E,F,G,H,I,Z> effApply(z: (A,B,C,D,E,F,G,H,I) -> Z,
                                                  a: Eff<X,W,A>,
                                                  b: Eff<X,W,B>,
@@ -391,7 +478,23 @@ fun <X,W:Monoid<W>,A,B,C,D,E,F,G,H,I,Z> effApply(z: (A,B,C,D,E,F,G,H,I) -> Z,
 }
 
 
-// 10
+fun <X,W:Monoid<W>,A,B,C,D,E,F,G,H,I,Z> apply(z: (A,B,C,D,E,F,G,H,I) -> Z,
+                                              a: Eff<X,W,A>,
+                                              b: Eff<X,W,B>,
+                                              c: Eff<X,W,C>,
+                                              d: Eff<X,W,D>,
+                                              e: Eff<X,W,E>,
+                                              f: Eff<X,W,F>,
+                                              g: Eff<X,W,G>,
+                                              h: Eff<X,W,H>,
+                                              i: Eff<X,W,I>) : Eff<X,W,Z> =
+                                            effApply(z,a,b,c,d,e,f,g,h,i)
+
+
+// ---------------------------------------------------------------------------------------------
+// APPLICATIVE APPLY 10
+// ---------------------------------------------------------------------------------------------
+
 fun <X,W:Monoid<W>,A,B,C,D,E,F,G,H,I,J,Z> effApply(z: (A,B,C,D,E,F,G,H,I,J) -> Z,
                                                    a: Eff<X,W,A>,
                                                    b: Eff<X,W,B>,
@@ -470,7 +573,24 @@ fun <X,W:Monoid<W>,A,B,C,D,E,F,G,H,I,J,Z> effApply(z: (A,B,C,D,E,F,G,H,I,J) -> Z
 }
 
 
-// 11
+fun <X,W:Monoid<W>,A,B,C,D,E,F,G,H,I,J,Z> apply(z: (A,B,C,D,E,F,G,H,I,J) -> Z,
+                                                a: Eff<X,W,A>,
+                                                b: Eff<X,W,B>,
+                                                c: Eff<X,W,C>,
+                                                d: Eff<X,W,D>,
+                                                e: Eff<X,W,E>,
+                                                f: Eff<X,W,F>,
+                                                g: Eff<X,W,G>,
+                                                h: Eff<X,W,H>,
+                                                i: Eff<X,W,I>,
+                                                j: Eff<X,W,J>) : Eff<X,W,Z> =
+                                            effApply(z,a,b,c,d,e,f,g,h,i,j)
+
+
+// ---------------------------------------------------------------------------------------------
+// APPLICATIVE APPLY 11
+// ---------------------------------------------------------------------------------------------
+
 fun <X,W:Monoid<W>,A,B,C,D,E,F,G,H,I,J,K,Z> effApply(z: (A,B,C,D,E,F,G,H,I,J,K) -> Z,
                                                      a: Eff<X,W,A>,
                                                      b: Eff<X,W,B>,
@@ -556,7 +676,25 @@ fun <X,W:Monoid<W>,A,B,C,D,E,F,G,H,I,J,K,Z> effApply(z: (A,B,C,D,E,F,G,H,I,J,K) 
 }
 
 
-// 12
+fun <X,W:Monoid<W>,A,B,C,D,E,F,G,H,I,J,K,Z> apply(z: (A,B,C,D,E,F,G,H,I,J,K) -> Z,
+                                                  a: Eff<X,W,A>,
+                                                  b: Eff<X,W,B>,
+                                                  c: Eff<X,W,C>,
+                                                  d: Eff<X,W,D>,
+                                                  e: Eff<X,W,E>,
+                                                  f: Eff<X,W,F>,
+                                                  g: Eff<X,W,G>,
+                                                  h: Eff<X,W,H>,
+                                                  i: Eff<X,W,I>,
+                                                  j: Eff<X,W,J>,
+                                                  k: Eff<X,W,K>) : Eff<X,W,Z> =
+                                                effApply(z,a,b,c,d,e,f,g,h,i,j,k)
+
+
+// ---------------------------------------------------------------------------------------------
+// APPLICATIVE APPLY 12
+// ---------------------------------------------------------------------------------------------
+
 fun <X,W:Monoid<W>,A,B,C,D,E,F,G,H,I,J,K,L,Z> effApply(z: (A,B,C,D,E,F,G,H,I,J,K,L) -> Z,
                                                        a: Eff<X,W,A>,
                                                        b: Eff<X,W,B>,
@@ -649,7 +787,26 @@ fun <X,W:Monoid<W>,A,B,C,D,E,F,G,H,I,J,K,L,Z> effApply(z: (A,B,C,D,E,F,G,H,I,J,K
 }
 
 
-// 13
+fun <X,W:Monoid<W>,A,B,C,D,E,F,G,H,I,J,K,L,Z> apply(z: (A,B,C,D,E,F,G,H,I,J,K,L) -> Z,
+                                                    a: Eff<X,W,A>,
+                                                    b: Eff<X,W,B>,
+                                                    c: Eff<X,W,C>,
+                                                    d: Eff<X,W,D>,
+                                                    e: Eff<X,W,E>,
+                                                    f: Eff<X,W,F>,
+                                                    g: Eff<X,W,G>,
+                                                    h: Eff<X,W,H>,
+                                                    i: Eff<X,W,I>,
+                                                    j: Eff<X,W,J>,
+                                                    k: Eff<X,W,K>,
+                                                    l: Eff<X,W,L>) : Eff<X,W,Z> =
+                                                effApply(z,a,b,c,d,e,f,g,h,i,j,k,l)
+
+
+// ---------------------------------------------------------------------------------------------
+// APPLICATIVE APPLY 13
+// ---------------------------------------------------------------------------------------------
+
 fun <X,W:Monoid<W>,A,B,C,D,E,F,G,H,I,J,K,L,M,Z> effApply(z: (A,B,C,D,E,F,G,H,I,J,K,L,M) -> Z,
                                                          a: Eff<X,W,A>,
                                                          b: Eff<X,W,B>,
@@ -749,9 +906,27 @@ fun <X,W:Monoid<W>,A,B,C,D,E,F,G,H,I,J,K,L,M,Z> effApply(z: (A,B,C,D,E,F,G,H,I,J
 }
 
 
+fun <X,W:Monoid<W>,A,B,C,D,E,F,G,H,I,J,K,L,M,Z> apply(z: (A,B,C,D,E,F,G,H,I,J,K,L,M) -> Z,
+                                                      a: Eff<X,W,A>,
+                                                      b: Eff<X,W,B>,
+                                                      c: Eff<X,W,C>,
+                                                      d: Eff<X,W,D>,
+                                                      e: Eff<X,W,E>,
+                                                      f: Eff<X,W,F>,
+                                                      g: Eff<X,W,G>,
+                                                      h: Eff<X,W,H>,
+                                                      i: Eff<X,W,I>,
+                                                      j: Eff<X,W,J>,
+                                                      k: Eff<X,W,K>,
+                                                      l: Eff<X,W,L>,
+                                                      m: Eff<X,W,M>) : Eff<X,W,Z> =
+                                                    effApply(z,a,b,c,d,e,f,g,h,i,j,k,l,m)
 
 
-// 14
+// ---------------------------------------------------------------------------------------------
+// APPLICATIVE APPLY 14
+// ---------------------------------------------------------------------------------------------
+
 fun <X,W:Monoid<W>,A,B,C,D,E,F,G,H,I,J,K,L,M,N,Z> effApply(z: (A,B,C,D,E,F,G,H,I,J,K,L,M,N) -> Z,
                                                            a: Eff<X,W,A>,
                                                            b: Eff<X,W,B>,
@@ -856,4 +1031,22 @@ fun <X,W:Monoid<W>,A,B,C,D,E,F,G,H,I,J,K,L,M,N,Z> effApply(z: (A,B,C,D,E,F,G,H,I
     return Val(z(aValue, bValue, cValue, dValue, eValue, fValue, gValue,
                  hValue, iValue, jValue, kValue, lValue, mValue, nValue), env)
 }
+
+
+fun <X,W:Monoid<W>,A,B,C,D,E,F,G,H,I,J,K,L,M,N,Z> apply(z: (A,B,C,D,E,F,G,H,I,J,K,L,M,N) -> Z,
+                                                        a: Eff<X,W,A>,
+                                                        b: Eff<X,W,B>,
+                                                        c: Eff<X,W,C>,
+                                                        d: Eff<X,W,D>,
+                                                        e: Eff<X,W,E>,
+                                                        f: Eff<X,W,F>,
+                                                        g: Eff<X,W,G>,
+                                                        h: Eff<X,W,H>,
+                                                        i: Eff<X,W,I>,
+                                                        j: Eff<X,W,J>,
+                                                        k: Eff<X,W,K>,
+                                                        l: Eff<X,W,L>,
+                                                        m: Eff<X,W,M>,
+                                                        n: Eff<X,W,N>) : Eff<X,W,Z> =
+                                                    effApply(z,a,b,c,d,e,f,g,h,i,j,k,l,m,n)
 
