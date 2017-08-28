@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/effect.iml" filepath="$PROJECT_DIR$/.idea/modules/effect.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/effect_main.iml" filepath="$PROJECT_DIR$/.idea/modules/effect_main.iml" group="effect" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/effect_test.iml" filepath="$PROJECT_DIR$/.idea/modules/effect_test.iml" group="effect" />
+    </modules>
+  </component>
+</project>
