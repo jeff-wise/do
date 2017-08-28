@@ -40,6 +40,43 @@ with the `Maybe` type.
 In this example, we have a simple program that depends on a few data sources. All of 
 the data sources are independent (the success of one does not depend on another). 
 
+Normally, in these scenarios, we end up with a lot of nested code and if statements 
+that are hard to read. `apply` with the Maybe type allows us to write functions as if 
+errors did not occur i.e. with the assumption that the inputs are non-null. It handles 
+checking each input for us and failing if any of the inputs do not exist.
+
+On a small-scale, this ensures code that is easy to read. On a large scale, as we will 
+see later, it becomes even more useful because it allows us to write a bunch of 
+functions which may fail, and easily combine them with other functions that may fail, 
+all at an arbitrary level of nesting.
+
+```kotlin
+// Read some file. Could fail for many reasons e.g. doesn't exist, no read privileges
+fun readFile() : Maybe<String> = Nothing()
+
+fun writeFile(fileString : String) { }
+
+// Parse a command from the user. Could fail if command is typed incorrectly.
+fun parseUserCommand() : Maybe<FileCommand> = Just(DeleteLine(4))
+
+// Given a file string and a command, perform an edit operation to the file. Note: The
+// parameters cannot be null.
+fun modifyFile(fileString : String, command : FileCommand) : String = ""
+
+// Apply the modify function to inputs which may or may not exist. This implies that the
+// result may or may not exist. We will have to check that, but we do not have to
+// verify if the parameters exist. If any parameter is missing, the function will fail.
+val newFileString : Maybe<String> = apply(::modifyFile, readFile(), parseUserCommand())
+
+when (newFileString) {
+    // A result exists, we can access it with .value
+    is Just    -> writeFile(newFileString.value)
+    // No result exists, one of the inputs was Nothing. Note that we don't know which
+    // one. For better error messages, the Eff type is more useful.
+    is Nothing -> System.out.println("An error occurred.")
+}
+```
+
 #### Dependent Effects (Monad Style)
 
 

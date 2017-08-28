@@ -16,3 +16,4 @@ object MyError
 
 
 typealias MyEff<A> = Eff<MyError, Identity, A>
+

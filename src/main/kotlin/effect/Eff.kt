@@ -16,6 +16,16 @@ interface Monoid<A> {
 }
 
 
+class Identity : Monoid<Identity>
+{
+    override fun mappend(x: Identity): Identity = this
+}
+
+
+// ---------------------------------------------------------------------------------------------
+// Eff
+// ---------------------------------------------------------------------------------------------
+
 sealed class Eff<E, W : Monoid<W>, A>(open val env : W) : Serializable
 {
 
@@ -138,56 +148,30 @@ sealed class Eff<E, W : Monoid<W>, A>(open val env : W) : Serializable
 }
 
 
+// Eff > Value
+// ---------------------------------------------------------------------------------------------
+
 data class Val<E, W : Monoid<W>, A>(val value : A, override val env : W) : Eff<E,W,A>(env)
-
-data class Err<E, W : Monoid<W>, A>(val error : E, override val env : W) : Eff<E,W,A>(env)
-
-
-fun <E,W:Monoid<W>,A> valueOf(eff : Eff<E,W,A>?) : A? =  when (eff)
-{
-    is Val -> eff.value
-    else   -> null
-}
 
 
 fun <E,A> effValue(value : A) : Eff<E,Identity,A> =
         Val(value, Identity())
 
 
+// Eff > Err
+// ---------------------------------------------------------------------------------------------
+
+data class Err<E, W : Monoid<W>, A>(val error : E, override val env : W) : Eff<E,W,A>(env)
+
+
 fun <E,A> effError(error : E) : Eff<E,Identity,A> =
         Err(error, Identity())
 
 
-class Identity : Monoid<Identity>
-{
-    override fun mappend(x: Identity): Identity = this
-}
 
-
-
-@Suppress("UNCHECKED_CAST")
-fun <E,R:Monoid<R>,A,T> split(a : Eff<E,R,Maybe<A>>,
-                              f : Eff<E,R,T>,
-                              g : (A) -> Eff<E,R,T>) : Eff<E,R,T> = when (a)
-{
-    is Val -> when (a.value)
-    {
-        is Just    -> g(a.value.value)
-        is Nothing -> f
-    }
-    is Err -> a as Eff<E,R,T>
-}
-
-
-
-fun <E,A> note(value  : A?, error : E) : Eff<E,Identity,A> =
-    if (value != null)
-        effValue<E,A>(value)
-    else
-        effError(error)
-
-
-// TODO mapM
+// ---------------------------------------------------------------------------------------------
+// COLLECTIONS
+// ---------------------------------------------------------------------------------------------
 
 fun <E,A> List<Eff<E,Identity,A>>.sequenceI() : Eff<E,Identity,List<A>>
 {
@@ -322,9 +306,34 @@ fun <E,A,B> Set<A>.mapMI(f : (A) -> Eff<E,Identity,B>) : Eff<E,Identity,Set<B>>
 }
 
 
+// ---------------------------------------------------------------------------------------------
+// UTILITIES
+// ---------------------------------------------------------------------------------------------
+
+fun <E,A> note(value  : A?, error : E) : Eff<E,Identity,A> =
+    if (value != null)
+        effValue<E,A>(value)
+    else
+        effError(error)
 
 
+@Suppress("UNCHECKED_CAST")
+fun <E,R:Monoid<R>,A,T> split(a : Eff<E,R,Maybe<A>>,
+                              f : Eff<E,R,T>,
+                              g : (A) -> Eff<E,R,T>) : Eff<E,R,T> = when (a)
+{
+    is Val -> when (a.value)
+    {
+        is Just    -> g(a.value.value)
+        is Nothing -> f
+    }
+    is Err -> a as Eff<E,R,T>
+}
 
-// need good domain data...
-// reading from CLI, read something from file
-// kind of user DB data? use in memory mock db
+
+fun <E,W:Monoid<W>,A> valueOf(eff : Eff<E,W,A>?) : A? =  when (eff)
+{
+    is Val -> eff.value
+    else   -> null
+}
+
