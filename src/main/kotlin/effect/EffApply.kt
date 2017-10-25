@@ -1050,3 +1050,140 @@ fun <X,W:Monoid<W>,A,B,C,D,E,F,G,H,I,J,K,L,M,N,Z> apply(z: (A,B,C,D,E,F,G,H,I,J,
                                                         n: Eff<X,W,N>) : Eff<X,W,Z> =
                                                     effApply(z,a,b,c,d,e,f,g,h,i,j,k,l,m,n)
 
+
+// ---------------------------------------------------------------------------------------------
+// APPLICATIVE APPLY 15
+// ---------------------------------------------------------------------------------------------
+
+fun <X,W:Monoid<W>,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,Z> effApply(z: (A,B,C,D,E,F,G,H,I,J,K,L,M,N,O) -> Z,
+                                                             a: Eff<X,W,A>,
+                                                             b: Eff<X,W,B>,
+                                                             c: Eff<X,W,C>,
+                                                             d: Eff<X,W,D>,
+                                                             e: Eff<X,W,E>,
+                                                             f: Eff<X,W,F>,
+                                                             g: Eff<X,W,G>,
+                                                             h: Eff<X,W,H>,
+                                                             i: Eff<X,W,I>,
+                                                             j: Eff<X,W,J>,
+                                                             k: Eff<X,W,K>,
+                                                             l: Eff<X,W,L>,
+                                                             m: Eff<X,W,M>,
+                                                             n: Eff<X,W,N>,
+                                                             o: Eff<X,W,O>) : Eff<X,W,Z>
+{
+    var env : W = a.env
+
+    val aValue = when (a) {
+        is Val -> a.value
+        is Err -> return Err(a.error, env)
+    }
+
+    env = env mappend b.env
+    val bValue = when (b) {
+        is Val -> b.value
+        is Err -> return Err(b.error, env)
+    }
+
+    env = env mappend c.env
+    val cValue = when (c) {
+        is Val -> c.value
+        is Err -> return Err(c.error, env)
+    }
+
+    env = env mappend d.env
+    val dValue = when (d) {
+        is Val -> d.value
+        is Err -> return Err(d.error, env)
+    }
+
+    env = env mappend e.env
+    val eValue = when (e) {
+        is Val -> e.value
+        is Err -> return Err(e.error, env)
+    }
+
+    env = env mappend f.env
+    val fValue = when (f) {
+        is Val -> f.value
+        is Err -> return Err(f.error, env)
+    }
+
+    env = env mappend g.env
+    val gValue = when (g) {
+        is Val -> g.value
+        is Err -> return Err(g.error, env)
+    }
+
+    env = env mappend h.env
+    val hValue = when (h) {
+        is Val -> h.value
+        is Err -> return Err(h.error, env)
+    }
+
+    env = env mappend i.env
+    val iValue = when (i) {
+        is Val -> i.value
+        is Err -> return Err(i.error, env)
+    }
+
+    env = env mappend j.env
+    val jValue = when (j) {
+        is Val -> j.value
+        is Err -> return Err(j.error, env)
+    }
+
+    env = env mappend k.env
+    val kValue = when (k) {
+        is Val -> k.value
+        is Err -> return Err(k.error, env)
+    }
+
+    env = env mappend l.env
+    val lValue = when (l) {
+        is Val -> l.value
+        is Err -> return Err(l.error, env)
+    }
+
+    env = env mappend m.env
+    val mValue = when (m) {
+        is Val -> m.value
+        is Err -> return Err(m.error, env)
+    }
+
+    env = env mappend n.env
+    val nValue = when (n) {
+        is Val -> n.value
+        is Err -> return Err(n.error, env)
+    }
+
+    env = env mappend o.env
+    val oValue = when (o) {
+        is Val -> o.value
+        is Err -> return Err(o.error, env)
+    }
+
+    return Val(z(aValue, bValue, cValue, dValue, eValue, fValue, gValue,
+                 hValue, iValue, jValue, kValue, lValue, mValue, nValue, oValue), env)
+}
+
+
+fun <X,W:Monoid<W>,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,Z> apply(z: (A,B,C,D,E,F,G,H,I,J,K,L,M,N,O) -> Z,
+                                                        a: Eff<X,W,A>,
+                                                        b: Eff<X,W,B>,
+                                                        c: Eff<X,W,C>,
+                                                        d: Eff<X,W,D>,
+                                                        e: Eff<X,W,E>,
+                                                        f: Eff<X,W,F>,
+                                                        g: Eff<X,W,G>,
+                                                        h: Eff<X,W,H>,
+                                                        i: Eff<X,W,I>,
+                                                        j: Eff<X,W,J>,
+                                                        k: Eff<X,W,K>,
+                                                        l: Eff<X,W,L>,
+                                                        m: Eff<X,W,M>,
+                                                        n: Eff<X,W,N>,
+                                                        o: Eff<X,W,O>) : Eff<X,W,Z> =
+                                                    effApply(z,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o)
+
+
