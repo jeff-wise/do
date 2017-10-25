@@ -76,6 +76,12 @@ fun <A> lift(value : A?) : Maybe<A> =
             Nothing()
 
 
+fun <A> maybe(defaultValue : A, maybeValue : Maybe<A>) : A = when (maybeValue)
+{
+    is Just    -> maybeValue.value
+    is Nothing -> defaultValue
+}
+
 
 
 fun <A> List<Maybe<A>>.filterJust() : List<A>
