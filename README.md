@@ -14,16 +14,33 @@ languages such as Haskell or OCaml. This library is an attempt to take the best 
 core parts of side-effect handling in those languages and implement them in a way 
 that is natural and intuitive in Kotlin.
 
+
+common case, want to write functions that operate on data that is there.
+when applying the functions, we deal with the failure cases.
+
+first thing I miss when leaving Haskell. also hard to do in haskell the right way.
+MTL takes some type to appreciate and use proficiently (or confidently)
+
+interface is important 
+
 **Table of Contents**
 
-- [Maybe](#maybe)
-  - [Two Simple Examples](#two-simple-examples)
-- [Eff](#eff)
+- [Installation](#installation)
+- [Why Use Kotlin Effects?](#why-use-kotlin-effects?)
+- [The Types](#the-types)
+  - [Maybe](#maybe)
+    - [Two Simple Examples](#two-simple-examples)
+  - [Eff](#eff)
 
+## Installation
 
-## Maybe
+## Why Use Kotlin Effects?
 
-### Two Simple Examples
+## The Types
+
+### Maybe
+
+#### Two Simple Examples
 
 Let's get motivated to use the `Maybe` type. In these examples we mock the functions 
 to keep things simple. Later, we will write some real programs. When learning how to 
@@ -35,7 +52,7 @@ Note that this library allows us to avoid exception handling in many cases. Some
 exceptions are necessary, but often we can write cleaner and more compositional code 
 with the `Maybe` type.
 
-#### Independent Effects (Applicative Style)
+##### Independent Effects (Applicative Style)
 
 In this example, we have a simple program that depends on a few data sources. All of 
 the data sources are independent (the success of one does not depend on another). 
@@ -51,6 +68,18 @@ functions which may fail, and easily combine them with other functions that may 
 all at an arbitrary level of nesting.
 
 ```kotlin
+
+// The file operations our program supports.
+// When using algebraic data types in a functional language, it's common to 
+// define types for everything. Explicit data always makes programs easier 
+// to read and maintain.
+sealed class FileCommand
+
+class DeleteFile : FileCommand()
+
+class DeleteLine(val lineNumber : Int) : FileCommand()
+
+
 // Read some file. Could fail for many reasons e.g. doesn't exist, no read privileges
 fun readFile() : Maybe<String> = Nothing()
 
@@ -77,7 +106,7 @@ when (newFileString) {
 }
 ```
 
-#### Dependent Effects (Monad Style)
+##### Dependent Effects (Monad Style)
 
 
-## Eff
+### Eff
