@@ -34,8 +34,6 @@ few other things) in pure functional languages and implement them in a way
 that is natural and intuitive in Kotlin.
 
 
-**Table of Contents**
-
 - [Installation](#installation)
 - [How It Works](#how-it-works)
 - [The Types](#the-types)
@@ -72,7 +70,7 @@ they are both simple and very general. You can adapt them to whichever
 language and tools you are using whether it is enterprise OOP or client-side 
 javascript (or better understand how they have already been adapted, because 
 they definitely have). Of course, this library is intended for use in Kotlin, 
-but even within Kotlin it will be up to you when and how to use *Do*.
+but even within Kotlin it will be up to you exactly when and how to use *Do*.
 
 In an ideal world, we would write our programs very simply. We only need 
 three things<sup>1</sup>:
@@ -81,35 +79,44 @@ three things<sup>1</sup>:
  * **Functions:** F = A -> B, G = B -> C, etc...
  * **Function Application:** F(A), G(B), etc...
 
+Of course, those three things may look very different depending on the programming 
+language. For example, in OOP, data is represented with classes, and functions 
+are methods, and both are used in the context of inheritance, static/dynamic 
+polymorphism, accessibility modifiers, and static modifiers. Perhaps the main appeal 
+of functional programming is that it has a simple model. Data is just data (typically 
+with algebraic data types )and functions are just functions.
 
+Many programming libraries deal either with data or functions. For example, and HTTP 
+client library may provide *functions* for communicating with HTTP servers. It will 
+also provide *data types* for representing the requests, responses, and other 
+parts of the interface. What libraries have you used that extend function application? 
+Perhaps a [functional] reactive programming library? These libraries in some way 
+manage function application, usually to control when it occurs (such as in response 
+to some event like a model update).  
 
+Do modifies the semantics of function application in a way that allows us to 
+write functions which assume valid input and then apply them over data which 
+may or not be valid. First, let's just think about other ways in which we 
+can modify the way that function application occurs i.e. what additional 
+semantics could we add?
 
-##### Footnotes
-1. See the [Simply Typed Lambda Calculus](https://en.wikipedia.org/wiki/Simply_typed_lambda_calculus)
-2. See [System F](https://en.wikipedia.org/wiki/System_F) 
+ * **Non-Determinism:** Every time we apply a function, it is applied in every 
+     way possible. This usually assumes that we are applying a function to a list. For 
+     example, if we have a list of values `[1, 2, 3]` and a function `isOdd` our 
+     non-deterministic application would result in `[True, False, True]`. We take 
+     each branch and then typically do something interesting with the results (such as 
+     the `any` function in this case). 
+ * **Logging:** Every time we apply a function, we also write a value to a log. 
+ * **Dependency:** Every time we apply a function, we also write a value to a log. 
 
+These additional semantics are very convincing in pure functional programming languages 
+like Haskell, but only some of them are fundamentally useful in Kotlin. Those are the 
+ones implemented by Do, namely Either and State. I'm considering adding logging as well.
 
+Now if you haven't caught on, what I'm really talking about are algebraic structures 
+called Functors, Applicative Functors, and Monads. 
 
-This library provides two types: `Eff` and `Maybe`. Both represent common coding 
-idioms taking from the pure functional programming paradigm. They provide a way to 
-deal with side-effects *compositionally*. Both types are based on mathematical 
-structures called Functors, Applicative Functors, and Monads. These structures are 
-notoriously difficult to understand, but 
-monads provide a way to abstract over function application. there are
-a lot of ways to do that e.g. list, state, read, etc... bullet pointis
-this library we mostly just care about apply functions that may fail.
-
-
-
-The data sources may fail. what if we could write our program in
-a maigcal world where data souces never fail. then we have a special
-machine which takes our "pure" program and runs it in the real world.
-Now, we need to make sure we can take this program and combine it with
-other "pure" programs which actually cannot fail. Because other
-programs cannot assume our program will fail. to guaratnee this
-doesn't ahppen, need to give our program a special type. 
-
-(low level)
+Work in Progress...
 
 
 ## Examples
@@ -236,12 +243,11 @@ you think about how that would complicate the program? Let's suppose we have a s
 different set of functions:
 
 ```kotlin
-data class MyData
+object MyData
 
 fun readFile(filepath : String) : Maybe<String> = Nothing()
 
 fun parseFile(fileString : String) : Maybe<MyData> = Nothing()
-
 
 // Now apply doesn't work! We need to first run readFile, and then parseFile 
 // on the result. In addition, we need to check if readFile fails and if it doesn not
@@ -249,7 +255,14 @@ fun parseFile(fileString : String) : Maybe<MyData> = Nothing()
 apply(::modifyFile, readFile("/data/filepath"), parseUserCommand(??))
 ```
 
+Work in Progress...
 
 ### Eff
 
+Work in Progress...
+
+
+#### Footnotes
+1. See the [Simply Typed Lambda Calculus](https://en.wikipedia.org/wiki/Simply_typed_lambda_calculus)
+2. See [System F](https://en.wikipedia.org/wiki/System_F) 
 
