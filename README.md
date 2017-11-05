@@ -17,14 +17,17 @@ Many (or most) functional programming libraries written for languages that aren'
 purely functional such as Kotlin, Swift, or Typescript try to mimic the exact APIs 
 or programming patterns used in pure functional languages such as Haskell or OCaml. 
 But those interfaces and patterns do not usually translate well on two levels: 
-the language level and the user level. These newer hybrid programming languages may 
+the language level and the user level. 
+
+Newer hybrid programming languages may 
 have sum types and parametric polymorphism, but in practice they are still far 
 less expressive than Haskell at both the value and type level. Therefore, the 
-translated interfaces are also less expressive and lose a lot of the benefits they had. 
+translated interfaces are also less expressive and lose a lot of the benefits. 
 Secondly, the average Haskell programmer has a decent understanding of type systems and 
 algebraic structures like monoids and functors, as well as general skills in programming 
 with immutability, higher-order functions, and lack of side-effects, but the 
-average programmer does not.
+average programmer does not, so the same structures and interfaces do not work 
+in other languages simply because no one will be able to use them.
 
 This library is an attempt to take the best and core parts of error handling (and a 
 few other things) in pure functional languages and implement them in a way 
@@ -34,16 +37,16 @@ that is natural and intuitive in Kotlin.
 **Table of Contents**
 
 - [Installation](#installation)
-- [Just Do It](#just-do-it)
+- [How It Works](#how-it-works)
 - [The Types](#the-types)
   - [Maybe](#maybe)
     - [Independent Effects](#two-simple-examples)
     - [Dependent Effects](#two-simple-examples)
   - [Eff](#eff)
 
-# Installation
+## Installation
 
-### Gradle
+#### Gradle
 
 ```
 allprojects {
@@ -59,7 +62,33 @@ dependencies {
 
 ```
 
-## Just Do It
+## How It Works
+
+In this tutorial, we will focus on understanding a few concepts, but not how 
+those concepts are applied. There are so many programming languages used in 
+modern software development and many tools, frameworks and design patterns 
+used within each language. The concepts discussed here are universal because 
+they are both simple and very general. You can adapt them to whichever 
+language and tools you are using whether it is enterprise OOP or client-side 
+javascript (or better understand how they have already been adapted, because 
+they definitely have). Of course, this library is intended for use in Kotlin, 
+but even within Kotlin it will be up to you when and how to use *Do*.
+
+In an ideal world, we would write our programs very simply. We only need 
+three things<sup>1</sup>:
+
+ * **Data/Objects:** A = Int, B = String, C = MyClass, etc...
+ * **Functions:** F = A -> B, G = B -> C, etc...
+ * **Function Application:** F(A), G(B), etc...
+
+
+
+
+##### Footnotes
+1. See the [Simply Typed Lambda Calculus](https://en.wikipedia.org/wiki/Simply_typed_lambda_calculus)
+2. See [System F](https://en.wikipedia.org/wiki/System_F) 
+
+
 
 This library provides two types: `Eff` and `Maybe`. Both represent common coding 
 idioms taking from the pure functional programming paradigm. They provide a way to 
@@ -70,43 +99,6 @@ monads provide a way to abstract over function application. there are
 a lot of ways to do that e.g. list, state, read, etc... bullet pointis
 this library we mostly just care about apply functions that may fail.
 
-(low level)
-
-
-common case, want to write functions that operate on data that is there.
-when applying the functions, we deal with the failure cases.
-
-first thing I miss when leaving Haskell. also hard to do in haskell the right way.
-MTL takes some type to appreciate and use proficiently (or confidently)
-
-interface is important 
-
-
-## Examples
-
-See Culebra for good usage example.
-
-
-## The Types
-
-### Maybe
-
-Let's get motivated to use the `Maybe` type. In these examples we mock the functions 
-to keep things simple. Later, we will write some real programs. 
-
-When learning how to use this library, remember to focus on the types. How we create 
-and compose the types is what makes these functions interesting.
-Thinking about types is what makes Haskell difficult, especially when
-dealing with nested and/or parameterized types. 
-
-Note that this library allows us to avoid exception handling in many cases. Sometimes, 
-exceptions are necessary, but often we can write cleaner and more compositional code 
-with the `Maybe` type.
-
-#### Independent Effects (Applicative Style)
-
-In this example, we have a simple program that depends on a few data sources. All of 
-the data sources are independent (the success of one does not depend on another). 
 
 
 The data sources may fail. what if we could write our program in
@@ -117,25 +109,82 @@ other "pure" programs which actually cannot fail. Because other
 programs cannot assume our program will fail. to guaratnee this
 doesn't ahppen, need to give our program a special type. 
 
-how do we implement apply? what shoudl it do? 
+(low level)
 
 
-Normally, in these scenarios, we end up with a lot of nested code and if statements 
-that are hard to read. `apply` with the Maybe type allows us to write functions as if 
-errors did not occur i.e. with the assumption that the inputs are non-null. It handles 
-checking each input for us and failing if any of the inputs do not exist.
+## Examples
 
-On a small-scale, this ensures that our code is easy to read. On a large
-scale, it means we can build programs that are more maintainable. This
-is simply because we are reducing the mental burden on the programmer
-to worry about values which may be null.  We can write our programs as if 
-the values could never be null. The trade-off is that those programs
-return values into a nullable context. 
+See [Culebra](https://github.com/jeff-wise/culebra) for an application of the library 
+in YAML parsing.
 
-abstract -> concrete
+## The Types
 
-show apply implementation
+### Maybe
 
+The `Maybe` type represents values that may or may not exist. It is a parameterized 
+sum type with two cases: `Just` represents a value, and `Nothing` represents no 
+value or null. *Parameterized* refers to the fact that `Maybe` takes a type parameter 
+that sets the type of value contained in the Maybe such as `Maybe<Int>` or `Maybe<String>`.
+
+```kotlin
+sealed class Maybe<A>
+
+data class Just<A>(val value : A) : Maybe<A>()
+
+class Nothing<A> : Maybe<A>()
+```
+
+#### Independent Effects (Applicative Style)
+
+In this example, we have a simple program that depends on a few data sources. All of 
+the data sources are independent (the success of one does not depend on another), and 
+each data source may fail to provide data when requested.
+
+The goal is to write our function as if the data sources were assumed be successful. 
+It's easier to program without the mental burden of worrying whether each value 
+is actually present or not. It also makes the code cleaner because we don't have 
+to constantly check our data. We just assume that nothing is null. Let's call this 
+our *naive* function.
+
+We will use the `apply` function to apply our naive function over the data sources (that 
+may fail). The `apply` function will manage validating the input data and only call 
+the naive function when all of the data is actually present. `apply` abstracts away 
+null values so we can write functions that assume non-null inputs and run them 
+on data which may be null.
+
+Let's write the `apply` function. But first, here is our *naive* function:
+
+```kotlin
+fun naive(fileData : String) : String = processFile(fileData)
+```
+
+`processFile` isn't defined. It's just there to represent what we want to do with 
+the file data.
+
+The problem we have to deal with now is that `fileData` is not marked as nullable (`String?`) 
+in the function, but it actually is. We need to write the `apply` function that will run 
+our `naive` function over nullable data. That is, the `apply` function will take our 
+function that can't fail and run it for us in an environment where it may fail. 
+
+The `apply` function isn't too complicated. It takes our `naive` function and our 
+nullable value `a`. We first need to check if `a` exists. If it doesn't -- if `a` is 
+ `Nothing`, then we just return `Nothing` because that's literally all we can do. 
+ The `naive` function cannot do anything without input. If `a` is present then we 
+ extract the value from the `Just` and pass it into the `naive` function.
+
+```kotlin
+fun <A,T> apply(naive : (A) -> T, a : Maybe<A>) : Maybe<T>
+{
+    val aValue = when (a) {
+        is Just    -> a.value
+        is Nothing -> return Nothing()
+    }
+
+    return Just(naive(aValue))
+}
+```
+
+Now we can put everything together with a larger example:
 
 ```kotlin
 
@@ -176,20 +225,31 @@ when (newFileString) {
 }
 ```
 
-#### Dependent Effects (Monad Style)
+#### Dependent Effects (Monadic Style)
 
-Go back to special programs exampl.e gave a special type to programs
-which look pure but can fail. what we if have many of these and want
-ot combine them. We need a way 
+In the previous section, the `readFile` and `parseUserCommand` functions returned `Maybe` 
+results. Those functions were run independently and their results were used by the `modifyFile` 
+function only when both the results were non-null. 
 
-abstract -> concrete
+What if the `parseUserCommand` function depends on the result of the `readFile` function? Can 
+you think about how that would complicate the program? Let's suppose we have a slightly 
+different set of functions:
 
-show apply implementation
+```kotlin
+data class MyData
+
+fun readFile(filepath : String) : Maybe<String> = Nothing()
+
+fun parseFile(fileString : String) : Maybe<MyData> = Nothing()
+
+
+// Now apply doesn't work! We need to first run readFile, and then parseFile 
+// on the result. In addition, we need to check if readFile fails and if it doesn not
+// fail we can run parseFile, and then check if parseFile failed.
+apply(::modifyFile, readFile("/data/filepath"), parseUserCommand(??))
+```
+
 
 ### Eff
 
-
-adding error types instead of Nothing
-
-do notation
 
