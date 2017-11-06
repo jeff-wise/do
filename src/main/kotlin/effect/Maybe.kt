@@ -35,6 +35,12 @@ sealed class Maybe<A> : Serializable
     infix fun <B> apply(f : (A) -> Maybe<B>) : Maybe<B> = this.ap(f)
 
 
+    fun doMaybe(f : (A) -> Unit) {
+        when (this) {
+            is Just -> f(this.value)
+        }
+    }
+
 
     fun toNullable() : A? = when(this)
     {
@@ -82,6 +88,13 @@ fun <A> maybe(defaultValue : A, maybeValue : Maybe<A>) : A = when (maybeValue)
     is Nothing -> defaultValue
 }
 
+
+fun <A> doMaybe(a : Maybe<A>, f : (A) -> Unit)
+{
+    when (a) {
+        is Just -> f(a.value)
+    }
+}
 
 
 fun <A> List<Maybe<A>>.filterJust() : List<A>
