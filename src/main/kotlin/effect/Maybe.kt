@@ -75,14 +75,14 @@ class Nothing<A> : Maybe<A>()
 }
 
 
-fun <A> lift(value : A?) : Maybe<A> =
-        if (value != null)
-            Just(value)
-        else
-            Nothing()
+fun <A> maybe(value : A?) : Maybe<A> =
+    if (value != null)
+        Just(value)
+    else
+        Nothing()
 
 
-fun <A> maybe(defaultValue : A, maybeValue : Maybe<A>) : A = when (maybeValue)
+fun <A> maybeValue(defaultValue : A, maybeValue : Maybe<A>) : A = when (maybeValue)
 {
     is Just    -> maybeValue.value
     is Nothing -> defaultValue
