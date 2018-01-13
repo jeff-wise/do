@@ -1,5 +1,5 @@
 
-package effect
+package maybe
 
 
 
@@ -10,7 +10,7 @@ package effect
 fun <A,T> apply(f: (A) -> T, a: Maybe<A>) : Maybe<T>
 {
     val aValue = when (a) {
-        is Just    -> a.value
+        is Just -> a.value
         is Nothing -> return Nothing()
     }
 

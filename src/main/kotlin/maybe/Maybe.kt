@@ -1,5 +1,5 @@
 
-package effect
+package maybe
 
 
 import java.io.Serializable
@@ -55,6 +55,27 @@ sealed class Maybe<A> : Serializable
  * Just
  */
 data class Just<A>(val value : A) : Maybe<A>()
+{
+
+    override fun equals(other : Any?) : Boolean
+    {
+        if (other is Just<*>) {
+            if (other.value != null)
+                return other.value.equals(this.value)
+        }
+        return false
+    }
+
+
+    override fun hashCode(): Int
+    {
+        if (this.value != null)
+            return this.value.hashCode()
+        else
+            return super.hashCode()
+    }
+
+}
 
 
 /**

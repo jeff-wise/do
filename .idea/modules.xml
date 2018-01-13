@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/effect.iml" filepath="$PROJECT_DIR$/.idea/modules/effect.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/effect_main.iml" filepath="$PROJECT_DIR$/.idea/modules/effect_main.iml" group="effect" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/effect_test.iml" filepath="$PROJECT_DIR$/.idea/modules/effect_test.iml" group="effect" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/do.iml" filepath="$PROJECT_DIR$/.idea/modules/do.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/do_main.iml" filepath="$PROJECT_DIR$/.idea/modules/do_main.iml" group="do" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/do_test.iml" filepath="$PROJECT_DIR$/.idea/modules/do_test.iml" group="do" />
     </modules>
   </component>
 </project>

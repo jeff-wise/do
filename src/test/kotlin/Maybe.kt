@@ -1,10 +1,10 @@
 
-import effect.Just
-import effect.Nothing
 import effect.apply
 import io.kotlintest.matchers.shouldBe
 import io.kotlintest.specs.StringSpec
-
+import maybe.Just
+import maybe.Nothing
+import maybe.apply
 
 
 class MaybeTests : StringSpec()
@@ -17,7 +17,7 @@ class MaybeTests : StringSpec()
 
 
         "Adding two Just values gives a Just result" {
-            val justSum = apply(::add, Just(2), Just(2))
+            val justSum = maybe.apply(::add, Just(2), Just(2))
             justSum shouldBe Just(4)
         }
 

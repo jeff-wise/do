@@ -2,6 +2,8 @@
 package effect
 
 
+import maybe.Just
+import maybe.Maybe
 import java.io.Serializable
 
 
@@ -145,6 +147,39 @@ sealed class Eff<E, W : Monoid<W>, A>(open val env : W) : Serializable
         }
         is Err -> Err(this.error, this.env)
     }
+
+
+    /**
+     * Gives the same flexibility as 'do-notation', but with a more conventional interface so that it is
+     * easy and intuitive to use in Kotlin. If you look at the source code, especially for the implementations
+     * with more than one 'with' argument, you can see that it literally implements do-notation expansion.
+     */
+    fun <B,C,D,F,G,T> applyWith(f : (A,B,C,D,F,G) -> Eff<E,W,T>,
+                                bEff : Eff<E,W,B>,
+                                cEff : Eff<E,W,C>,
+                                dEff : Eff<E,W,D>,
+                                fEff : Eff<E,W,F>,
+                                gEff : Eff<E,W,G>) : Eff<E,W,T> = when (this)
+    {
+        is Val -> {
+            val nextEffect = bEff ap {
+                                b -> cEff ap {
+                                c -> dEff ap {
+                                d -> fEff ap {
+                                f -> gEff ap {
+                                g -> f(this.value, b, c, d, f, g)
+                                }} } } }
+            val nextEnv    = this.env mappend nextEffect.env
+            when (nextEffect) {
+                is Val -> Val(nextEffect.value, nextEnv)
+                is Err -> Err(nextEffect.error, nextEnv)
+            }
+        }
+        is Err -> Err(this.error, this.env)
+    }
+
+
+
 }
 
 
@@ -318,14 +353,14 @@ fun <E,A> note(value  : A?, error : E) : Eff<E,Identity,A> =
 
 
 @Suppress("UNCHECKED_CAST")
-fun <E,R:Monoid<R>,A,T> split(a : Eff<E,R,Maybe<A>>,
+fun <E,R:Monoid<R>,A,T> split(a : Eff<E,R, Maybe<A>>,
                               f : Eff<E,R,T>,
                               g : (A) -> Eff<E,R,T>) : Eff<E,R,T> = when (a)
 {
     is Val -> when (a.value)
     {
-        is Just    -> g(a.value.value)
-        is Nothing -> f
+        is Just -> g(a.value.value)
+        else -> f
     }
     is Err -> a as Eff<E,R,T>
 }

@@ -1,11 +1,9 @@
 
-import effect.Just
-import effect.Maybe
-import effect.Nothing
-import effect.apply
 import io.kotlintest.specs.StringSpec
-
-
+import maybe.Just
+import maybe.Nothing
+import maybe.Maybe
+import maybe.apply
 
 
 class TutorialTests : StringSpec()
