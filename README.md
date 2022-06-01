@@ -1,3 +1,29 @@
+
+## :speech_balloon: Deprecated Side-Project
+
+This project was created for use with my
+[TaleTable](https://github.com/jeff-wise/taletable-legacy) project.
+I needed an effects library for use with Kotlin that meshed well
+with non-functional code and didn't come with very complicated
+types.
+
+The Kotlin language and ecosystem was still young when this was
+written. The type checker was noticably improved from the beginning
+of creating this library until the last commit. A lot (maybe too
+much) of the development time was spent in solving a sort of
+type-level puzzle in an effort to get the most practical interface
+with the most type-level guarantees while not upsetting the
+compiler.
+
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+
+
+
 # Do
 
 Do provides compositional error-handling in Kotlin. It allows you to write 
